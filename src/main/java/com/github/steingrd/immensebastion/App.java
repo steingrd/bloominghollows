@@ -6,7 +6,7 @@ import javax.servlet.http.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.*;
 
-public class ImmenseBastionApp extends HttpServlet {
+public class App extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -18,7 +18,7 @@ public class ImmenseBastionApp extends HttpServlet {
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
 		server.setHandler(context);
-		context.addServlet(new ServletHolder(new ImmenseBastionApp()), "/*");
+		context.addServlet(new ServletHolder(new App()), "/*");
 		server.start();
 		server.join();
 	}
