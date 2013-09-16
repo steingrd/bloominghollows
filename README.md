@@ -21,6 +21,10 @@ To run it locally on your machine, set the environment variable ``DATABASE_URL``
 
 	DATABASE_URL="postgres://user:password@localhost:5432/dbname
 
+and then run
+
+	java -cp target/classes:target/dependency/* com.github.steingrd.immensebastion.App
+
 To change the port that Jetty listens on, set the ``PORT`` variable.
 
 How to deploy it
