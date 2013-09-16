@@ -1,25 +1,76 @@
 package com.github.steingrd.immensebastion;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServlet;
+
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.*;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.springframework.beans.BeansException;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+
+import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
 
 public class App extends HttpServlet {
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.getWriter().print("Hello from Java!\n");
-	}
-
+	
 	public static void main(String[] args) throws Exception {
-		Server server = new Server(Integer.valueOf(System.getenv("PORT")));
+		
+		Server server = new Server(port());
+		
+		WebApplicationContext applicationContext = createSpringApplicationContext("ImmenseBastion", AppConfiguration.class);
+		
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
+		context.addServlet(jerseyServlet(), "/rest/*");
+		context.addEventListener(createSpringContextLoader(applicationContext));
+		
 		server.setHandler(context);
-		context.addServlet(new ServletHolder(new App()), "/*");
+		
+		// let's start this thing now...
 		server.start();
 		server.join();
+		
+	}
+
+	private static ContextLoaderListener createSpringContextLoader(final WebApplicationContext applicationContext) {
+		return new ContextLoaderListener() {
+			@Override
+			protected WebApplicationContext createWebApplicationContext(ServletContext sc) {
+				return applicationContext;
+			}
+		};
+	}
+
+	private static WebApplicationContext createSpringApplicationContext(final String displayName, final Class... contextConfigLocaition) {
+		return new AnnotationConfigWebApplicationContext() {
+			{
+				setDisplayName(displayName);
+				register(contextConfigLocaition);
+				super.refresh();
+			}
+			
+			@Override
+			public void refresh() throws BeansException, IllegalStateException {
+				// avoid re-initializing the context once the servlet context has loaded
+			}
+		};
+	}
+
+	private static ServletHolder jerseyServlet() {
+		ServletHolder holder = new ServletHolder(new SpringServlet());
+		holder.setInitParameter("com.sun.jersey.config.property.packages", 
+				//"com.github.steingrd.immensebastion.rest" + ";" +
+				"org.codehaus.jackson.jaxrs");
+		return holder;
+	}
+
+	private static Integer port() {
+		String port = System.getenv("PORT");
+		if (port == null) {
+			port = "9090";
+		}
+		return Integer.valueOf(port);
 	}
 }
