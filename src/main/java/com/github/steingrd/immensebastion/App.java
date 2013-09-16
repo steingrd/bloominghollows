@@ -60,8 +60,8 @@ public class App extends HttpServlet {
 
 	private static ServletHolder jerseyServlet() {
 		ServletHolder holder = new ServletHolder(new SpringServlet());
-		holder.setInitParameter("com.sun.jersey.config.property.packages", 
-				//"com.github.steingrd.immensebastion.rest" + ";" +
+		holder.setInitParameter(
+				"com.sun.jersey.config.property.packages", 
 				"org.codehaus.jackson.jaxrs");
 		return holder;
 	}
