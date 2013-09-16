@@ -1,6 +1,7 @@
 package com.github.steingrd.immensebastion.rest;
 
-import java.util.ArrayList;
+import static com.github.steingrd.immensebastion.domain.AccountFinderSpecification.allAccounts;
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -9,27 +10,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.steingrd.immensebastion.domain.Account;
+import com.github.steingrd.immensebastion.domain.Repository;
 
 @Component
 @Path("/accounts")
 public class AccountService {
 	
 	@Autowired
-	private SessionFactory sessionFactory;
-
+	private Repository repository;
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response accounts() {
-		List<Account> accounts = new ArrayList<>();
-		accounts.add(new Account("foobar"));
-		accounts.add(new Account("zotbar"));
-		accounts.add(new Account("session " + (sessionFactory != null)));
-		
+		List<Account> accounts = repository.find(allAccounts());
 		return Response.status(200).entity(accounts).build();
 	}
 	

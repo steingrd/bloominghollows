@@ -21,7 +21,12 @@ public class Account {
 	@XmlElement
 	public String name;
 
+	private Account() {
+		// hibernate
+	}
+	
 	public Account(String name) {
+		this();
 		this.name = name;
 	}
 
