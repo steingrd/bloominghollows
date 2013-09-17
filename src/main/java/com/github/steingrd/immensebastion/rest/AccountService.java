@@ -1,6 +1,6 @@
 package com.github.steingrd.immensebastion.rest;
 
-import static com.github.steingrd.immensebastion.domain.AccountFinderSpecification.allAccounts;
+import static com.github.steingrd.immensebastion.domain.AccountSpecification.allAccounts;
 
 import java.util.List;
 
