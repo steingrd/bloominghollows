@@ -37,9 +37,11 @@ public class AppConfiguration {
 	public SessionFactory sessionFactory(DataSource dataSource) {
 		LocalSessionFactoryBuilder sessionFactoryBuilder = new LocalSessionFactoryBuilder(dataSource);
 		sessionFactoryBuilder.scanPackages("com.github.steingrd.immensebastion");
+		sessionFactoryBuilder.addProperties(hibernateProperties());
 		return sessionFactoryBuilder.buildSessionFactory();
 	}
 
+	@Bean
 	public Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.dialect",  "org.hibernate.dialect.PostgreSQLDialect");
