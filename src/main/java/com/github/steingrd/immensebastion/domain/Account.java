@@ -30,4 +30,8 @@ public class Account {
 		this.name = name;
 	}
 
+	public void update(Account newValues) {
+		this.name = newValues.name;
+	}
+
 }

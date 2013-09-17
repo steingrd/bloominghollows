@@ -24,10 +24,15 @@ public class Repository {
 		return (T) criteriaFor(specification).uniqueResult();
 	}	
 
+	public <T> void store(T obj) {
+		sessionFactory.getCurrentSession().saveOrUpdate(obj);
+	}
+	
 	private <T> Criteria criteriaFor(Specification<T> specification) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(specification.getType());
 		specification.populate(criteria);
 		return criteria;
 	}
+
 }
