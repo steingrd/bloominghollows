@@ -36,7 +36,7 @@ public class AccountService {
 	
 	@GET
 	@Produces(APPLICATION_JSON)
-	public Response accounts() {
+	public Response listAccounts() {
 		List<Account> accounts = repository.find(allAccounts());
 		return ok().entity(accounts).build();
 	}
@@ -51,7 +51,7 @@ public class AccountService {
 	@GET
 	@Path("/{id}")
 	@Produces(APPLICATION_JSON)
-	public Response account(@PathParam("id") Long id) {
+	public Response showAccount(@PathParam("id") Long id) {
 		Account account = repository.get(accountWithId(id));
 		return ok().entity(account).build();
 	}
