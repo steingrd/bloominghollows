@@ -16,10 +16,18 @@ public class Repository {
 	
 	@SuppressWarnings("unchecked")
 	public <T> List<T> find(Specification<T> specification) {
+		return criteriaFor(specification).list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T get(Specification<T> specification) {
+		return (T) criteriaFor(specification).uniqueResult();
+	}	
+
+	private <T> Criteria criteriaFor(Specification<T> specification) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(specification.getType());
 		specification.populate(criteria);
-		return criteria.list();
+		return criteria;
 	}
-	
 }
