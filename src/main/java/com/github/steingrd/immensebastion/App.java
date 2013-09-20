@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.springframework.beans.BeansException;
@@ -24,6 +25,7 @@ public class App extends HttpServlet {
 		
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
+		context.addServlet(defaultServlet(), "/*");
 		context.addServlet(jerseyServlet(), "/rest/*");
 		context.addFilter(OpenSessionInViewFilter.class, "/rest/*", null);
 		context.addEventListener(createSpringContextLoader(applicationContext));
@@ -58,6 +60,17 @@ public class App extends HttpServlet {
 				// avoid re-initializing the context once the servlet context has loaded
 			}
 		};
+	}
+	
+	private static ServletHolder defaultServlet() {
+		String resourceBase = App.class.getClassLoader().getResource("web/").toExternalForm();
+		
+		ServletHolder holder = new ServletHolder(DefaultServlet.class);
+		holder.setInitParameter("resourceBase", resourceBase);
+		holder.setInitParameter("dirAllowed", "true");
+		holder.setInitParameter("pathInfoOnly", "true");
+		
+		return holder;
 	}
 
 	private static ServletHolder jerseyServlet() {
