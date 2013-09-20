@@ -18,6 +18,16 @@ public class DbConfiguration {
 	@Bean
 	public URI dbUrl() {
 		String fromEnvironment = System.getenv("DATABASE_URL");
+		
+		// no env variable? try system property
+		if (fromEnvironment == null) {
+			fromEnvironment = System.getProperty("DATABASE_URL");
+		}
+		
+		// still nothing? let's just fail
+		if (fromEnvironment == null) {
+			throw new RuntimeException("Could not find environment variable or system property named 'DATABASE_URL'.");
+		}
 		return URI.create(fromEnvironment);
 	}
 	

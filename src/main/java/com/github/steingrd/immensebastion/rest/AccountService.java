@@ -5,7 +5,6 @@ import static com.github.steingrd.immensebastion.domain.AccountSpecification.all
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.seeOther;
-import static javax.ws.rs.core.Response.Status.OK;
 
 import java.net.URI;
 import java.util.List;

@@ -47,7 +47,7 @@ public class App extends HttpServlet {
 		};
 	}
 
-	private static WebApplicationContext createSpringApplicationContext(final String displayName, final Class... contextConfigLocaition) {
+	private static WebApplicationContext createSpringApplicationContext(final String displayName, @SuppressWarnings("rawtypes") final Class... contextConfigLocaition) {
 		return new AnnotationConfigWebApplicationContext() {
 			{
 				setDisplayName(displayName);
