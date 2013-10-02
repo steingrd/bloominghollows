@@ -1,4 +1,4 @@
-package com.github.steingrd.immensebastion;
+package com.github.steingrd.bloominghollows;
 
 import java.net.URI;
 import java.util.Properties;

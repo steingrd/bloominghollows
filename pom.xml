@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.steingrd</groupId>
 	<version>1.0-SNAPSHOT</version>
-	<artifactId>immense-bastion</artifactId>
+	<artifactId>blooming-hollows</artifactId>
 
 	<properties>
 		<slf4j.version>1.7.5</slf4j.version>

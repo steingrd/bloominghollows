@@ -1,4 +1,4 @@
-package com.github.steingrd.immensebastion.domain;
+package com.github.steingrd.bloominghollows.domain;
 
 import java.util.List;
 

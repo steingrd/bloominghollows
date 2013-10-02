@@ -1,4 +1,4 @@
-package com.github.steingrd.immensebastion.rest;
+package com.github.steingrd.bloominghollows.rest;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.github.steingrd.immensebastion;
+package com.github.steingrd.bloominghollows;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;

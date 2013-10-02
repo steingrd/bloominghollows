@@ -1,7 +1,7 @@
-package com.github.steingrd.immensebastion.rest;
+package com.github.steingrd.bloominghollows.rest;
 
-import static com.github.steingrd.immensebastion.domain.AccountSpecification.accountWithId;
-import static com.github.steingrd.immensebastion.domain.AccountSpecification.allAccounts;
+import static com.github.steingrd.bloominghollows.domain.AccountSpecification.accountWithId;
+import static com.github.steingrd.bloominghollows.domain.AccountSpecification.allAccounts;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.seeOther;
@@ -22,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.steingrd.immensebastion.domain.Account;
-import com.github.steingrd.immensebastion.domain.Repository;
+import com.github.steingrd.bloominghollows.domain.Account;
+import com.github.steingrd.bloominghollows.domain.Repository;
 
 @Component
 @Path("/accounts")

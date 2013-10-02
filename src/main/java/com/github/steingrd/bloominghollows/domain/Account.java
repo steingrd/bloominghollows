@@ -1,4 +1,4 @@
-package com.github.steingrd.immensebastion.domain;
+package com.github.steingrd.bloominghollows.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

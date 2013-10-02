@@ -1,4 +1,4 @@
-package com.github.steingrd.immensebastion;
+package com.github.steingrd.bloominghollows;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
