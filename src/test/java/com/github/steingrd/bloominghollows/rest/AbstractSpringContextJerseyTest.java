@@ -29,13 +29,13 @@ public abstract class AbstractSpringContextJerseyTest extends JerseyTest {
 
 	@Override
 	protected AppDescriptor configure() {
-		System.setProperty("DATABASE_URL", "postgres://steingrd:pukkverk@127.0.0.1:5432/immensebastion");
+		System.setProperty("DATABASE_URL", "postgres://steingrd:pukkverk@127.0.0.1:5432/bloominghollows");
 		return new WebAppDescriptor
 			.Builder("com.github.steingrd.immensebastion.rest")
 			.contextPath("/rest")
 			.initParam("com.sun.jersey.config.property.packages", "org.codehaus.jackson.jaxrs")
 			.contextParam("contextClass", "org.springframework.web.context.support.AnnotationConfigWebApplicationContext")
-			.contextParam("contextConfigLocation", "com.github.steingrd.immensebastion.AppConfiguration")
+			.contextParam("contextConfigLocation", "com.github.steingrd.bloominghollows.AppConfiguration")
 			.servletClass(SpringServlet.class)
 			.contextListenerClass(ContextLoaderListener.class)
 			.build();

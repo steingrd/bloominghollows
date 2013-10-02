@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(basePackages = "com.github.steingrd.immensebastion")
+@ComponentScan(basePackages = "com.github.steingrd.bloominghollows")
 @EnableTransactionManagement
 @Import({DbConfiguration.class})
 public class AppConfiguration {

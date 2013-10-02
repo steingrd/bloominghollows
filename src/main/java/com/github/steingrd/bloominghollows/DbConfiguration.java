@@ -44,7 +44,7 @@ public class DbConfiguration {
 	@Bean
 	public SessionFactory sessionFactory(DataSource dataSource) {
 		LocalSessionFactoryBuilder sessionFactoryBuilder = new LocalSessionFactoryBuilder(dataSource);
-		sessionFactoryBuilder.scanPackages("com.github.steingrd.immensebastion");
+		sessionFactoryBuilder.scanPackages("com.github.steingrd.bloominghollows");
 		sessionFactoryBuilder.addProperties(hibernateProperties());
 		return sessionFactoryBuilder.buildSessionFactory();
 	}

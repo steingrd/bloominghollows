@@ -1,4 +1,4 @@
-package com.github.steingrd.bloominghollows.domain;
+package com.github.steingrd.bloominghollows.system;
 
 import java.util.List;
 
