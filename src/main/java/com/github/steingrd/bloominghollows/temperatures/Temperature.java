@@ -1,15 +1,21 @@
 package com.github.steingrd.bloominghollows.temperatures;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "temperatures")
+@XmlRootElement
 public class Temperature {
 
 	@Id
@@ -18,7 +24,8 @@ public class Temperature {
 	public Long id;
 
 	@XmlElement
-	private String timestamp;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date timestamp;
 	
 	@XmlElement
 	private Integer temperature;
@@ -26,7 +33,7 @@ public class Temperature {
 	private Temperature() {
 	}
 	
-	public Temperature(String timestamp, Integer temperature) {
+	public Temperature(Date timestamp, Integer temperature) {
 		this();
 		this.timestamp = timestamp;
 		this.temperature = temperature;
@@ -36,7 +43,7 @@ public class Temperature {
 		return temperature;
 	}
 	
-	public String getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 	
