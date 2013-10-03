@@ -47,11 +47,11 @@ public class App extends HttpServlet {
 		};
 	}
 
-	private static WebApplicationContext createSpringApplicationContext(final String displayName, @SuppressWarnings("rawtypes") final Class... contextConfigLocaition) {
+	private static WebApplicationContext createSpringApplicationContext(final String displayName, @SuppressWarnings("rawtypes") final Class... contextConfigLocation) {
 		return new AnnotationConfigWebApplicationContext() {
 			{
 				setDisplayName(displayName);
-				register(contextConfigLocaition);
+				register(contextConfigLocation);
 				super.refresh();
 			}
 			
