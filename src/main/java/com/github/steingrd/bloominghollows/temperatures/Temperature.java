@@ -24,8 +24,6 @@ public class Temperature {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	public Long id;
 
-	// TODO use DateTime instead of Date
-	
 	@XmlElement
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
