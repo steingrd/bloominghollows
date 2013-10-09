@@ -1,4 +1,4 @@
-package com.github.steingrd.bloominghollows;
+package com.github.steingrd.bloominghollows.config;
 
 import java.net.URI;
 import java.util.Properties;

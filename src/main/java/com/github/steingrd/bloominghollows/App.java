@@ -1,19 +1,17 @@
 package com.github.steingrd.bloominghollows;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.springframework.beans.BeansException;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
-import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
+import com.github.steingrd.bloominghollows.config.AppConfiguration;
 
 public class App extends HttpServlet {
 	
@@ -21,14 +19,13 @@ public class App extends HttpServlet {
 		
 		Server server = new Server(port());
 		
-		WebApplicationContext applicationContext = createSpringApplicationContext("ImmenseBastion", AppConfiguration.class);
-		
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-		context.setContextPath("/");
+		context.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
+		context.setInitParameter("contextConfigLocation", AppConfiguration.class.getName());
 		context.addServlet(defaultServlet(), "/*");
-		context.addServlet(jerseyServlet(), "/rest/*");
-		context.addFilter(OpenSessionInViewFilter.class, "/rest/*", null);
-		context.addEventListener(createSpringContextLoader(applicationContext));
+		context.addServlet(dispatcherServlet(), "/service/*");
+		context.addFilter(OpenSessionInViewFilter.class, "/service/*", null);
+		context.addEventListener(new ContextLoaderListener());
 		
 		server.setHandler(context);
 		
@@ -38,30 +35,6 @@ public class App extends HttpServlet {
 		
 	}
 
-	private static ContextLoaderListener createSpringContextLoader(final WebApplicationContext applicationContext) {
-		return new ContextLoaderListener() {
-			@Override
-			protected WebApplicationContext createWebApplicationContext(ServletContext sc) {
-				return applicationContext;
-			}
-		};
-	}
-
-	private static WebApplicationContext createSpringApplicationContext(final String displayName, @SuppressWarnings("rawtypes") final Class... contextConfigLocation) {
-		return new AnnotationConfigWebApplicationContext() {
-			{
-				setDisplayName(displayName);
-				register(contextConfigLocation);
-				super.refresh();
-			}
-			
-			@Override
-			public void refresh() throws BeansException, IllegalStateException {
-				// avoid re-initializing the context once the servlet context has loaded
-			}
-		};
-	}
-	
 	private static ServletHolder defaultServlet() {
 		String resourceBase = App.class.getClassLoader().getResource("web/").toExternalForm();
 		
@@ -73,11 +46,10 @@ public class App extends HttpServlet {
 		return holder;
 	}
 
-	private static ServletHolder jerseyServlet() {
-		ServletHolder holder = new ServletHolder(new SpringServlet());
-		holder.setInitParameter(
-				"com.sun.jersey.config.property.packages", 
-				"org.codehaus.jackson.jaxrs");
+	private static ServletHolder dispatcherServlet() {
+		ServletHolder holder = new ServletHolder(new DispatcherServlet());
+		holder.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
+		holder.setInitParameter("contextConfigLocation", AppConfiguration.class.getName());
 		return holder;
 	}
 

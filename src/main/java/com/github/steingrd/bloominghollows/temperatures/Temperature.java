@@ -1,7 +1,6 @@
 package com.github.steingrd.bloominghollows.temperatures;
 
-import java.util.Date;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,6 +11,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
 @Entity
 @Table(name = "temperatures")
@@ -23,17 +24,22 @@ public class Temperature {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	public Long id;
 
+	// TODO use DateTime instead of Date
+	
 	@XmlElement
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date timestamp;
+	@Column
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	private DateTime timestamp;
 	
+	@Column
 	@XmlElement
 	private Integer temperature;
 
 	private Temperature() {
 	}
 	
-	public Temperature(Date timestamp, Integer temperature) {
+	public Temperature(DateTime timestamp, Integer temperature) {
 		this();
 		this.timestamp = timestamp;
 		this.temperature = temperature;
@@ -43,7 +49,7 @@ public class Temperature {
 		return temperature;
 	}
 	
-	public Date getTimestamp() {
+	public DateTime getTimestamp() {
 		return timestamp;
 	}
 	

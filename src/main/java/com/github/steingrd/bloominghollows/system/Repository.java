@@ -24,8 +24,10 @@ public class Repository {
 		return (T) criteriaFor(specification).uniqueResult();
 	}	
 
-	public <T> void store(T obj) {
-		sessionFactory.getCurrentSession().saveOrUpdate(obj);
+	public <T> void store(@SuppressWarnings("unchecked") T... objects) {
+		for (T o : objects) {
+			sessionFactory.getCurrentSession().saveOrUpdate(o);
+		}
 	}
 	
 	private <T> Criteria criteriaFor(Specification<T> specification) {
