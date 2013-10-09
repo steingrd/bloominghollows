@@ -11,16 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.github.steingrd.bloominghollows.auth.AuthTokenService;
 import com.github.steingrd.bloominghollows.system.Repository;
 
 import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecification.allTemperatures;
 import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecification.allTemperaturesForDate;
 import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -34,13 +37,24 @@ public class TemperatureController {
 	@Autowired
 	private Repository repository;
 	
+	@Autowired
+	private AuthTokenService authToken;
+	
 	@RequestMapping(method = POST, consumes = "application/json")
-	public void postTemperature(HttpServletResponse response, @RequestBody Temperature temperature) {
+	public void postTemperature(HttpServletResponse response,
+			@RequestHeader("X-Auth-Token") String token, @RequestBody Temperature temperature) {
+		
 		if (temperature == null) {
 			logger.info("RequestBody is null, no Temperature to store -> 400/Bad Request");
 			response.setStatus(SC_BAD_REQUEST);
+			return;
 		}
-		
+
+		if (!authToken.isValid(token)) {
+			logger.info("Token [{}] is not valid -> 401/Forbidden", token);
+			response.setStatus(SC_FORBIDDEN);
+			return;
+		}
 		
 		repository.store(temperature);
 		response.setStatus(SC_ACCEPTED);

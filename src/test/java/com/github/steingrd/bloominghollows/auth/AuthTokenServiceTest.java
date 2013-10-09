@@ -30,19 +30,19 @@ public class AuthTokenServiceTest {
 	@Test
 	public void shouldAcceptValidToken() throws Exception {
 		repository.store(new AuthToken("test.token"));
-		assertThat(authTokenService.isValidToken("test.token")).isTrue();
+		assertThat(authTokenService.isValid("test.token")).isTrue();
 	}
 	
 	@Test
 	public void shouldNotAcceptInvalidTokens() throws Exception {
-		assertThat(authTokenService.isValidToken("test.token")).isFalse();
+		assertThat(authTokenService.isValid("test.token")).isFalse();
 	}
 	
 	@Test
 	public void shouldCreateValidTokens() throws Exception {
 		String token = authTokenService.create();
 		assertThat(token).isNotNull();
-		assertThat(authTokenService.isValidToken(token)).isTrue();
+		assertThat(authTokenService.isValid(token)).isTrue();
 	}
 	
 }

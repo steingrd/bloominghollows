@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.github.steingrd.bloominghollows.auth.AuthToken;
 import com.github.steingrd.bloominghollows.config.AppConfiguration;
 import com.github.steingrd.bloominghollows.system.Repository;
 
@@ -46,6 +47,7 @@ public class TemperatureControllerTest {
 	@Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(appContext).build();
+        repository.store(new AuthToken("valid.token"));
     }
 
 	@Test
@@ -57,10 +59,30 @@ public class TemperatureControllerTest {
 	public void shouldReturnStatusAcceptedWhenTemperatureIsPersisted() throws Exception {
 		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
 		
-		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON))
+		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "valid.token"))
 			.andExpect(status().isAccepted());
 
 		assertThat(repository.find(allTemperatures())).hasSize(1);
+	}
+	
+	@Test
+	public void shouldReturnStatusBadRequestItAuthTokenIsNotPresented() throws Exception {
+		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
+		
+		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON))
+			.andExpect(status().isBadRequest());
+		
+		assertThat(repository.find(allTemperatures())).hasSize(0);
+	}
+	
+	@Test
+	public void shouldReturnStatusForbiddenIfPresentedAuthTokenIsNotValid() throws Exception {
+		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
+		
+		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "invalid.token"))
+			.andExpect(status().isForbidden());
+		
+		assertThat(repository.find(allTemperatures())).hasSize(0);
 	}
 	
 	@Test

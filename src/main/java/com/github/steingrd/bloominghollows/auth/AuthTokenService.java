@@ -16,7 +16,7 @@ public class AuthTokenService {
 	@Autowired
 	private Repository repository;
 	
-	public boolean isValidToken(String token) {
+	public boolean isValid(String token) {
 		AuthToken authToken = repository.get(tokenByString(token));
 		return authToken != null;
 	}
