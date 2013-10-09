@@ -3,3 +3,8 @@ create table temperatures (
 	"timestamp" timestamp not null,
 	"temperature" integer not null
 );
+
+create table tokens (
+	"id" serial not null,
+	"token" varchar(64) not null
+);
