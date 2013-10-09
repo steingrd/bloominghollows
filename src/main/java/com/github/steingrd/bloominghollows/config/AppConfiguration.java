@@ -1,13 +1,9 @@
 package com.github.steingrd.bloominghollows.config;
 
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(basePackages = "com.github.steingrd.bloominghollows")
-@EnableTransactionManagement
-@Import({DbConfiguration.class, WebConfiguration.class})
+@Import({DbConfiguration.class, WebConfiguration.class, PackageConfiguration.class})
 public class AppConfiguration {
 }

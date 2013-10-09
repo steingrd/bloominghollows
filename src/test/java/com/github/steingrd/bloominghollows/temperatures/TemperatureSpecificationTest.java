@@ -1,7 +1,6 @@
 package com.github.steingrd.bloominghollows.temperatures;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.steingrd.bloominghollows.config.AppConfiguration;
+import com.github.steingrd.bloominghollows.config.DbConfiguration;
+import com.github.steingrd.bloominghollows.config.PackageConfiguration;
 import com.github.steingrd.bloominghollows.system.Repository;
 
 import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecification.allTemperatures;
@@ -20,14 +20,12 @@ import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecif
 import static org.fest.assertions.Assertions.assertThat;
 
 import static org.joda.time.LocalDate.parse;
-import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { AppConfiguration.class })
+@ContextConfiguration(classes = { DbConfiguration.class, PackageConfiguration.class })
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
-@WebAppConfiguration // TODO remove this by import DbConfiguration only
 public class TemperatureSpecificationTest {
 
 	@Autowired
