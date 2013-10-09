@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 @WebAppConfiguration
-public class TemperaturesServiceTest {
+public class TemperatureControllerTest {
 
 	private MockMvc mockMvc;
 

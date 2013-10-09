@@ -8,7 +8,7 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,12 +24,12 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@Service
+@Controller
 @Transactional
 @RequestMapping("/temperatures")
-public class TemperaturesService {
+public class TemperatureController {
 	
-	private final Logger logger = LoggerFactory.getLogger(TemperaturesService.class);
+	private final Logger logger = LoggerFactory.getLogger(TemperatureController.class);
 	
 	@Autowired
 	private Repository repository;
