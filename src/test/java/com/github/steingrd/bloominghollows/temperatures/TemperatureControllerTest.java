@@ -51,7 +51,7 @@ public class TemperatureControllerTest {
     }
 
 	@Test
-	public void shouldStatusReturnBadRequestForEmptyRequestBody() throws Exception {
+	public void shouldReturnStatusBadRequestForEmptyRequestBody() throws Exception {
 		mockMvc.perform(post("/temperatures").contentType(APPLICATION_JSON)).andExpect(status().isBadRequest());
 	}
 	
@@ -66,7 +66,7 @@ public class TemperatureControllerTest {
 	}
 	
 	@Test
-	public void shouldReturnStatusBadRequestItAuthTokenIsNotPresented() throws Exception {
+	public void shouldReturnStatusBadRequestIfAuthTokenIsNotPresented() throws Exception {
 		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
 		
 		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON))
