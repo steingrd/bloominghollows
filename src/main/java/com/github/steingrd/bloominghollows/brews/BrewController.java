@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,7 +34,7 @@ public class BrewController {
 	}
 	
 	@RequestMapping(method = POST, consumes = "application/json")
-	public void createBrew(HttpServletResponse response, @RequestBody Brew brew) {
+	public void createBrew(HttpServletResponse response, @RequestHeader("X-Auth-Token") String token, @RequestBody Brew brew) {
 		repository.store(brew);
 		response.setStatus(HttpServletResponse.SC_CREATED);
 	}

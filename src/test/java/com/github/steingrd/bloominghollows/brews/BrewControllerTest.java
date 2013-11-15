@@ -71,12 +71,24 @@ public class BrewControllerTest {
 	}
 	
 	@Test
-	public void shouldCreateNewBrewAndReturnStatusCreated() throws Exception {
+	public void shouldReturnStatusBadRequestIfAuthTokenIsNotPresented() throws Exception {
 		String json = "{\"name\": \"test brew!\"}";
 		
 		assertThat(repository.find(allBrews())).hasSize(0);
 		
 		mockMvc.perform(post("/brews").content(json).contentType(APPLICATION_JSON))
+			.andExpect(status().isBadRequest());
+		
+		assertThat(repository.find(allBrews())).hasSize(0);
+	}
+	
+	@Test
+	public void shouldCreateNewBrewAndReturnStatusCreated() throws Exception {
+		String json = "{\"name\": \"test brew!\"}";
+		
+		assertThat(repository.find(allBrews())).hasSize(0);
+		
+		mockMvc.perform(post("/brews").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "valid.token"))
 			.andExpect(status().isCreated());
 		
 		List<Brew> brews = repository.find(allBrews());
