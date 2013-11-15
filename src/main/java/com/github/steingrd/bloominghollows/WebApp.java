@@ -13,6 +13,10 @@ import com.github.steingrd.bloominghollows.config.AppConfiguration;
 
 public class WebApp {
 
+	public static void main(String[] args) throws Exception {
+		start();
+	}
+	
 	public static void start() throws Exception {
 		Server server = new Server(port());
 		
