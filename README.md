@@ -1,20 +1,14 @@
+# Fermentation Temperature Tracker #
 
-Home Brew Fermentation Temperature Tracker
-==========================================
+## REST API ##
 
-REST API
---------
+### List brews ###
 
-List brews
-~~~~~~~~~~
-
-    GET /brews
+	GET /brews
+	
+	[ { "id": 1, "name": "My Brew" }, { "id": 2, "name": "Another Brew" } ]
     
-    [ { "id": 1, "name": "My Brew" }, { "id": 2, "name": "Another Brew" } ]
-    
-    
-Create a new brew
-~~~~~~~~~~~~~~~~~
+### Create a new brew ###
 
 	POST /brews
 	{ "name": "My New Brew" }
@@ -23,17 +17,14 @@ Create a new brew
 	Location: /brews/3
 
 
-Upload a new temperature reading
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Upload a new temperature reading ###
 
 	POST /temperatures
 	{ "timestamp": "2013-10-01T12:00:00", "temperature": 20 }
 	
 	202 Accepted
 
-
-List temperature readings for a given day
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### List temperature readings for a given day ###
 
 	GET /temperatures?day=2013-10-01
 	
