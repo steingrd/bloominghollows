@@ -22,7 +22,16 @@ public class Repository {
 	@SuppressWarnings("unchecked")
 	public <T> T get(Specification<T> specification) {
 		return (T) criteriaFor(specification).uniqueResult();
-	}	
+	}
+	
+	public <T> T getOrNull(Specification<T> specification) {
+		List<T> list = find(specification);
+		if (list.isEmpty()) {
+			return null;
+		}
+		
+		return list.get(0);
+	}
 
 	public <T> void store(@SuppressWarnings("unchecked") T... objects) {
 		for (T o : objects) {

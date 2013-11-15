@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -13,6 +14,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+
+import com.github.steingrd.bloominghollows.brews.Brew;
 
 @Entity
 @Table(name = "temperatures")
@@ -24,6 +27,9 @@ public class Temperature {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	public Long id;
 
+	@ManyToOne
+	private Brew brew;
+	
 	@XmlElement
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
@@ -37,10 +43,19 @@ public class Temperature {
 	private Temperature() {
 	}
 	
-	public Temperature(DateTime timestamp, Integer temperature) {
+	public Temperature(Brew brew, DateTime timestamp, Integer temperature) {
 		this();
+		this.brew = brew;
 		this.timestamp = timestamp;
 		this.temperature = temperature;
+	}
+	
+	public void setBrew(Brew brew) {
+		this.brew = brew;
+	}
+	
+	public Brew getBrew() {
+		return brew;
 	}
 
 	public Integer getTemperature() {

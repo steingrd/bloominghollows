@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.github.steingrd.bloominghollows.auth.AuthToken;
+import com.github.steingrd.bloominghollows.brews.Brew;
 import com.github.steingrd.bloominghollows.config.AppConfiguration;
 import com.github.steingrd.bloominghollows.system.Repository;
 
@@ -37,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TemperatureControllerTest {
 
 	private MockMvc mockMvc;
+	private Brew brew;
 
 	@Autowired
 	private WebApplicationContext appContext;
@@ -46,20 +48,33 @@ public class TemperatureControllerTest {
 	
 	@Before
     public void setup() {
+		this.brew = new Brew("TemperatureControllerTest");
+		repository.store(this.brew);
+		
         this.mockMvc = MockMvcBuilders.webAppContextSetup(appContext).build();
         repository.store(new AuthToken("valid.token"));
     }
+	
+	@Test
+	public void shouldReturnStatusNotFoundWhenPostingToInvalidBrewId() throws Exception {
+		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
+		
+		mockMvc.perform(post("/brews/" + (brew.getId() - 1) + "/temperatures").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "valid.token"))
+			.andExpect(status().isNotFound());
 
+		assertThat(repository.find(allTemperatures())).hasSize(0);
+	}
+	
 	@Test
 	public void shouldReturnStatusBadRequestForEmptyRequestBody() throws Exception {
-		mockMvc.perform(post("/temperatures").contentType(APPLICATION_JSON)).andExpect(status().isBadRequest());
+		mockMvc.perform(post("/brews/" + brew.getId() + "/temperatures").contentType(APPLICATION_JSON)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
 	public void shouldReturnStatusAcceptedWhenTemperatureIsPersisted() throws Exception {
 		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
 		
-		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "valid.token"))
+		mockMvc.perform(post("/brews/" + brew.getId() + "/temperatures").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "valid.token"))
 			.andExpect(status().isAccepted());
 
 		assertThat(repository.find(allTemperatures())).hasSize(1);
@@ -69,7 +84,7 @@ public class TemperatureControllerTest {
 	public void shouldReturnStatusBadRequestIfAuthTokenIsNotPresented() throws Exception {
 		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
 		
-		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON))
+		mockMvc.perform(post("/brews/" + brew.getId() + "/temperatures").content(json).contentType(APPLICATION_JSON))
 			.andExpect(status().isBadRequest());
 		
 		assertThat(repository.find(allTemperatures())).hasSize(0);
@@ -79,20 +94,26 @@ public class TemperatureControllerTest {
 	public void shouldReturnStatusForbiddenIfPresentedAuthTokenIsNotValid() throws Exception {
 		String json = "{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": 20}";
 		
-		mockMvc.perform(post("/temperatures").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "invalid.token"))
+		mockMvc.perform(post("/brews/" + brew.getId() + "/temperatures").content(json).contentType(APPLICATION_JSON).header("X-Auth-Token", "invalid.token"))
 			.andExpect(status().isForbidden());
 		
 		assertThat(repository.find(allTemperatures())).hasSize(0);
 	}
 	
 	@Test
+	public void shouldReturnStatusNotFoundWhenListingUnknownBrew() throws Exception {
+		mockMvc.perform(get("/brews/" + 1 + "/temperatures"))
+			.andExpect(status().isNotFound());
+	}
+	
+	@Test
 	public void shouldListAllTemperatures() throws Exception {
 		repository.store(
-				t("2013-10-01T01:00:00", 20), 
-				t("2013-10-01T01:00:00", 21), 
-				t("2013-10-02T01:00:00", 22));
+				t(brew, "2013-10-01T01:00:00", 20), 
+				t(brew, "2013-10-01T01:00:00", 21), 
+				t(brew, "2013-10-02T01:00:00", 22));
 		
-		mockMvc.perform(get("/temperatures"))
+		mockMvc.perform(get("/brews/" + brew.getId() + "/temperatures"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$", hasSize(3)));
 	}
@@ -100,17 +121,57 @@ public class TemperatureControllerTest {
 	@Test
 	public void shouldListAllTemperaturesForGivenDay() throws Exception {
 		repository.store(
-				t("2013-10-01T01:00:00", 20), 
-				t("2013-10-01T01:01:00", 21), 
-				t("2013-10-02T01:00:00", 22));
+				t(brew, "2013-10-01T01:00:00", 20), 
+				t(brew, "2013-10-01T01:01:00", 21), 
+				t(brew, "2013-10-02T01:00:00", 22));
 		
-		mockMvc.perform(get("/temperatures?date=2013-10-01"))
+		mockMvc.perform(get("/brews/" + brew.getId() + "/temperatures?date=2013-10-01"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$", hasSize(2)));
 	}
 	
-	private static Temperature t(String date, int temp) {
-		return new Temperature(DateTime.parse(date), temp);
+	@Test
+	public void shouldOnlyGetTemperaturesForCurrentBrew() throws Exception {
+		Brew anotherBrew = new Brew("Another Brew");
+		repository.store(anotherBrew);
+		
+		repository.store(
+				t(anotherBrew, "2013-10-01T01:00:00", 20), 
+				t(anotherBrew, "2013-10-01T01:00:00", 21), 
+				t(anotherBrew, "2013-10-02T01:00:00", 22));
+		
+		repository.store(
+				t(brew, "2013-10-01T01:00:00", 20), 
+				t(brew, "2013-10-01T01:00:00", 21), 
+				t(brew, "2013-10-02T01:00:00", 22));
+		
+		mockMvc.perform(get("/brews/" + brew.getId() + "/temperatures"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(3)));
+	}
+	
+	@Test
+	public void shouldOnlyGetTemperaturesForCurrentBrewForGivenDate() throws Exception {
+		Brew anotherBrew = new Brew("Another Brew");
+		repository.store(anotherBrew);
+		
+		repository.store(
+				t(anotherBrew, "2013-10-01T01:00:00", 20), 
+				t(anotherBrew, "2013-10-01T01:00:00", 21), 
+				t(anotherBrew, "2013-10-02T01:00:00", 22));
+		
+		repository.store(
+				t(brew, "2013-10-01T01:00:00", 20), 
+				t(brew, "2013-10-01T01:00:00", 21), 
+				t(brew, "2013-10-02T01:00:00", 22));
+		
+		mockMvc.perform(get("/brews/" + brew.getId() + "/temperatures?date=2013-10-01"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(2)));
+	}
+	
+	private static Temperature t(Brew brew, String date, int temp) {
+		return new Temperature(brew, DateTime.parse(date), temp);
 	}
 	
 }

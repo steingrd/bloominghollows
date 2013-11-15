@@ -29,7 +29,7 @@ All write operations require an authorization token. The client should present t
 
 ### Upload a new temperature reading ###
 
-	POST /temperatures
+	POST /brews/{brewId}/temperatures
 	X-Auth-Token: some-valid-token
 	
 	{ "timestamp": "2013-10-01T12:00:00", "temperature": 20 }
@@ -40,7 +40,7 @@ All write operations require an authorization token. The client should present t
 
 ### List temperature readings for a given day ###
 
-	GET /temperatures?day=2013-10-01
+	GET /brews/{brewId}/temperatures?day=2013-10-01
 	
 	==>
 	
