@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.google.common.base.Objects;
+
 @Entity
 @Table(name = "brews")
 @XmlRootElement
@@ -18,6 +20,7 @@ public class Brew {
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
+	@XmlElement
 	public Long id;
 
 	@Column
@@ -40,4 +43,8 @@ public class Brew {
 		return name;
 	}
 	
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("id", id).add("name", name).toString();
+	}
 }

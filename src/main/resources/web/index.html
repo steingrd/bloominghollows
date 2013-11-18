@@ -1,3 +1,35 @@
-<html>
-<h1>Hello, world!</h1>
+<!doctype html>
+<html ng-app>
+<head>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+	<script src="/js/app.js"></script>
+</head>
+<body ng-controller="BrewListController">
+	<div class="jumbotron">
+		<div class="container">
+			<h1>blooming-hollows</h1>
+  			<p>Home brew fermentation temperature tracker</p>
+  			<form ng-submit="createBrew()">
+  				<input type="text" ng-model="authToken" placeholder="Auth Token" />
+  				<input type="text" ng-model="brewName" placeholder="Brew Name" />
+  				<input type="submit" class="btn btn-primary" value="Create brew" />
+  			</form>
+		</div>
+	</div>
+	<div class="container">
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>Name</th>
+				<th>Endpoint</th>
+			</tr>
+			<tr ng-repeat="b in brews">
+				<td>{{ b.name }}</td>
+				<td>/service/brews/{{ b.id }}/temperatures</td>
+			</tr>
+		</table>
+	</div>
+</body>
 </html>
