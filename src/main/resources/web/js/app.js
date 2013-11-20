@@ -1,3 +1,23 @@
+angular.module('bhApp', ['ngRoute'])
+	.config(['$routeProvider', function($routeProvider) {
+		$routeProvider
+    		.when('/', { 
+    			templateUrl: 'partials/brew-list.html', 
+    			controller: BrewListController
+    		})
+    		.when('/brews/:brewId', { 
+    			templateUrl: 'partials/brew-temperatures.html', 
+    			controller: TemperaturesController 
+    		})
+    		.otherwise({ 
+    			redirectTo: '/' 
+    		})
+	}]);
+
+function TemperaturesController ($scope) {
+	
+}
+
 function BrewListController ($scope, $http) {
 	
 	$scope.refresh = function () {

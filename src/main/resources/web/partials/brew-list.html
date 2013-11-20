@@ -1,0 +1,27 @@
+<div ng-controller="BrewListController">
+	<div class="jumbotron">
+		<div class="container">
+			<h1>blooming-hollows</h1>
+  			<p>Home brew fermentation temperature tracker</p>
+  			<form ng-submit="createBrew()">
+  				<input type="password" ng-model="authToken" placeholder="Auth Token" />
+  				<input type="text" ng-model="brewName" placeholder="Brew Name" />
+  				<input type="submit" class="btn btn-primary" value="Create brew" />
+  			</form>
+		</div>
+	</div>
+	<div class="container">
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>Name</th>
+				<th>API Endpoint</th>
+				<th>Temperatures</th>
+			</tr>
+			<tr ng-repeat="b in brews">
+				<td>{{ b.name }}</td>
+				<td>/service/brews/{{ b.id }}/temperatures</td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+</div>
