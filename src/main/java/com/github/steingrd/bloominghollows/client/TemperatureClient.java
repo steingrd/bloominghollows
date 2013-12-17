@@ -24,7 +24,7 @@ public class TemperatureClient {
 		this.authToken = authToken;
 	}
 
-	public void post(int temperature) {
+	public void post(int temperature) throws Exception {
 		HttpPost request = new HttpPost(url);
 		request.addHeader("X-Auth-Token", authToken);
 		request.setEntity(new StringEntity(json(temperature), Charsets.UTF_8));
