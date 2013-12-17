@@ -24,7 +24,7 @@ public class TemperatureClient {
 		this.authToken = authToken;
 	}
 
-	public void post(int temperature) throws Exception {
+	public void post(float temperature) throws Exception {
 		HttpPost request = new HttpPost(url);
 		request.addHeader("X-Auth-Token", authToken);
 		request.setEntity(new StringEntity(json(temperature), Charsets.UTF_8));
@@ -39,8 +39,8 @@ public class TemperatureClient {
 		}
 	}
 
-	private String json(int temperature) {
-		 return String.format("{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": %d}", temperature);
+	private String json(float temperature) {
+		 return String.format("{\"timestamp\": \"2013-10-01T12:00:00\", \"temperature\": %f}", temperature);
 	}
 
 }
