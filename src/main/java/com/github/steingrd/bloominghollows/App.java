@@ -16,6 +16,14 @@ public class App extends HttpServlet {
 	}
 
 	public static String propertyOrEnvVariable(String name) {
+		String value = propertyOrEnvVariableWithDefault(name, null);
+		if (value == null) {
+			throw new RuntimeException("No environment variable or system property named " + name);
+		}
+		return value;
+	}
+	
+	public static String propertyOrEnvVariableWithDefault(String name, String defaultValue) {
 		String value = System.getProperty(name);
 		if (value != null) {
 			ClientApp.log.info("System property BLOOMING_HOLLOWS_TEMPERATURE_URL is [{}].", value);
@@ -28,7 +36,7 @@ public class App extends HttpServlet {
 			return value;
 		}
 	
-		throw new RuntimeException("No environment variable or system property named " + name);
+		return defaultValue;
 	}
 
 }

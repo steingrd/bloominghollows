@@ -38,12 +38,12 @@ public class Temperature {
 	
 	@Column
 	@XmlElement
-	private Integer temperature;
+	private Float temperature;
 
 	private Temperature() {
 	}
 	
-	public Temperature(Brew brew, DateTime timestamp, Integer temperature) {
+	public Temperature(Brew brew, DateTime timestamp, Float temperature) {
 		this();
 		this.brew = brew;
 		this.timestamp = timestamp;
@@ -58,7 +58,7 @@ public class Temperature {
 		return brew;
 	}
 
-	public Integer getTemperature() {
+	public Float getTemperature() {
 		return temperature;
 	}
 	

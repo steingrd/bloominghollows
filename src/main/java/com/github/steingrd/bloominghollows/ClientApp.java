@@ -12,7 +12,10 @@ import com.github.steingrd.bloominghollows.client.TempDevice;
 import com.github.steingrd.bloominghollows.client.TemperatureClient;
 import com.github.steingrd.bloominghollows.client.UsbHidTempDevice;
 
+import static java.lang.Integer.parseInt;
+
 import static com.github.steingrd.bloominghollows.App.propertyOrEnvVariable;
+import static com.github.steingrd.bloominghollows.App.propertyOrEnvVariableWithDefault;
 
 public class ClientApp {
 
@@ -24,8 +27,9 @@ public class ClientApp {
 		final String url = propertyOrEnvVariable("BLOOMING_HOLLOWS_TEMPERATURE_URL");
 		final String authToken = propertyOrEnvVariable("BLOOMING_HOLLOWS_AUTH_TOKEN");
 		final String deviceType = propertyOrEnvVariable("BLOOMING_HOLLOWS_DEVICE");
-		
+		final int seconds = parseInt(propertyOrEnvVariableWithDefault("BLOOMING_HOLLOWS_INTERVAL", "5"));
 		final TempDevice device = createDevice(deviceType);
+		final TemperatureClient client = new TemperatureClient(url, authToken);
 		
 		ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 		executorService.scheduleWithFixedDelay(new Runnable() {
@@ -33,7 +37,6 @@ public class ClientApp {
 			@Override
 			public void run() {
 				try {
-					TemperatureClient client = new TemperatureClient(url, authToken);
 					float t = device.getTemperature();
 					LoggerFactory.getLogger(ClientApp.class).info("Got temperature [{}].", t);
 					client.post(t);
@@ -43,7 +46,7 @@ public class ClientApp {
 				}
 			}
 			
-		}, 0, 5, TimeUnit.SECONDS);
+		}, 0, seconds, TimeUnit.SECONDS);
 
 	}
 

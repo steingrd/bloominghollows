@@ -2,7 +2,7 @@ create table temperatures (
 	"id" serial not null,
 	"brew_id" integer not null,
 	"timestamp" timestamp not null,
-	"temperature" integer not null
+	"temperature" numeric(4, 2) not null
 );
 
 create table tokens (

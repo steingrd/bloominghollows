@@ -55,7 +55,7 @@ public class TemperatureSpecificationTest {
 		assertThat(repository.find(allTemperaturesForBrewByDate(brew, parse("2013-10-01")))).hasSize(1);
 	}
 	
-	private static Temperature t(Brew brew, String date, int temp) {
+	private static Temperature t(Brew brew, String date, float temp) {
 		return new Temperature(brew, DateTime.parse(date), temp);
 	}
 	
