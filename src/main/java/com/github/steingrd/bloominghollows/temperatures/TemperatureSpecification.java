@@ -10,12 +10,14 @@ import com.github.steingrd.bloominghollows.system.Specification;
 
 import static org.hibernate.criterion.Restrictions.eq;
 import static org.hibernate.criterion.Restrictions.ge;
+import static org.hibernate.criterion.Restrictions.gt;
 import static org.hibernate.criterion.Restrictions.le;
 
 public class TemperatureSpecification implements Specification<Temperature> {
 
 	private LocalDate date;
 	private Brew brew;
+	private DateTime since;
 
 	@Override
 	public Class<Temperature> getType() {
@@ -29,6 +31,10 @@ public class TemperatureSpecification implements Specification<Temperature> {
 			DateTime endOfDay = date.plusDays(1).toDateTime(LocalTime.MIDNIGHT);
 			criteria.add(ge("timestamp", startOfDay));
 			criteria.add(le("timestamp", endOfDay));
+		}
+		
+		if (since != null) {
+			criteria.add(gt("timestamp", since));
 		}
 		
 		if (brew != null) {
@@ -47,6 +53,13 @@ public class TemperatureSpecification implements Specification<Temperature> {
 		return spec;
 	}
 
+	public static Specification<Temperature> allTemperaturesForBrewSinceDateTime(Brew brew, DateTime since) {
+		TemperatureSpecification spec = new TemperatureSpecification();
+		spec.brew = brew;
+		spec.since = since;
+		return spec;
+	}
+	
 	public static Specification<Temperature> allTemperaturesForBrew(Brew brew) {
 		TemperatureSpecification spec = new TemperatureSpecification();
 		spec.brew = brew;

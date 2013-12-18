@@ -17,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.github.steingrd.bloominghollows.auth.AuthToken;
 import com.github.steingrd.bloominghollows.brews.Brew;
 import com.github.steingrd.bloominghollows.config.AppConfiguration;
+import com.github.steingrd.bloominghollows.system.MutableTimeSource;
 import com.github.steingrd.bloominghollows.system.Repository;
 
 import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecification.allTemperatures;
@@ -40,6 +41,9 @@ public class TemperatureControllerTest {
 	private MockMvc mockMvc;
 	private Brew brew;
 
+	@Autowired
+	private TemperatureController controller;
+	
 	@Autowired
 	private WebApplicationContext appContext;
 	
@@ -126,6 +130,20 @@ public class TemperatureControllerTest {
 				t(brew, "2013-10-02T01:00:00", 22));
 		
 		mockMvc.perform(get("/brews/" + brew.getId() + "/temperatures?date=2013-10-01"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(2)));
+	}
+	
+	@Test
+	public void shouldListTemperaturesForLastHour() throws Exception {
+		controller.setTimeSource(new MutableTimeSource(DateTime.parse("2013-10-01T01:59:00")));
+		
+		repository.store(
+				t(brew, "2013-10-01T00:48:00", 20), 
+				t(brew, "2013-10-01T01:01:00", 21), 
+				t(brew, "2013-10-01T01:02:00", 22));
+		
+		mockMvc.perform(get("/brews/" + brew.getId() + "/temperatures?range=lastHour"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$", hasSize(2)));
 	}

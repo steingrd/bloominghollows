@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.steingrd.bloominghollows.auth.AuthTokenService;
 import com.github.steingrd.bloominghollows.brews.Brew;
 import com.github.steingrd.bloominghollows.system.Repository;
+import com.github.steingrd.bloominghollows.system.TimeSource;
 
 import static com.github.steingrd.bloominghollows.brews.BrewSpecification.brewWithId;
 import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecification.allTemperaturesForBrew;
 import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecification.allTemperaturesForBrewByDate;
+import static com.github.steingrd.bloominghollows.temperatures.TemperatureSpecification.allTemperaturesForBrewSinceDateTime;
 import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
@@ -43,6 +46,9 @@ public class TemperatureController {
 	
 	@Autowired
 	private AuthTokenService authToken;
+	
+	@Autowired
+	private TimeSource timeSource;
 	
 	@RequestMapping(method = POST, consumes = "application/json")
 	public void postTemperature(HttpServletResponse response,
@@ -77,7 +83,8 @@ public class TemperatureController {
 	@RequestMapping(method = GET, produces = "application/json")
 	public @ResponseBody List<Temperature> listTemperatures(HttpServletResponse response,
 			@PathVariable("brewId") Long brewId,
-			@RequestParam(required=false) String date) {
+			@RequestParam(required=false) String date,
+			@RequestParam(required=false) String range) {
 
 		Brew brew = repository.getOrNull(brewWithId(brewId));
 		if (brew == null) {
@@ -91,7 +98,16 @@ public class TemperatureController {
 			return repository.find(allTemperaturesForBrewByDate(brew, LocalDate.parse(date)));
 		} 
 		
+		if (range != null && range.equals("lastHour")) {
+			DateTime t = timeSource.now().minusHours(1);
+			return repository.find(allTemperaturesForBrewSinceDateTime(brew, t));
+		}
+		
 		return repository.find(allTemperaturesForBrew(brew));
+	}
+
+	public void setTimeSource(TimeSource timeSource) {
+		this.timeSource = timeSource;
 	}
 	
 }

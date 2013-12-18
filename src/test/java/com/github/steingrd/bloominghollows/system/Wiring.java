@@ -25,6 +25,9 @@ public class Wiring<T> {
 	public static <T> WiringInProgress<T> wire(T obj) {
 		return new WiringInProgress<T>(obj);
 	}
+
+	public void restore() {
+	}
 	
 	public static class WiringInProgress<U> {
 		private final U obj;
@@ -33,6 +36,25 @@ public class Wiring<T> {
 			this.obj = obj;
 		}
 
+		public Wiring<U> with(Object value) {
+			List<Field> assignedFields = new ArrayList<>();
+			
+			Field[] fields = this.obj.getClass().getDeclaredFields();
+			for (Field field : fields) {
+				if (!isAnnotatedWith(field, Resource.class, Autowired.class)) {
+					continue;
+				}
+				
+				if (field.getType().isAssignableFrom(value.getClass())) {
+					ReflectionUtils.makeAccessible(field);
+					ReflectionUtils.setField(field, obj, value);
+					assignedFields.add(field);
+				}
+			}
+			
+			return new Wiring<U>(obj, assignedFields);
+		}
+		
 		public Wiring<U> withFieldsFrom(ApplicationContext context) {
 			List<Field> assignedFields = new ArrayList<>();
 			
