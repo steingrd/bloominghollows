@@ -49,6 +49,15 @@ public class ClientApp {
 		}, 0, seconds, TimeUnit.SECONDS);
 
 	}
+	
+	public static void testDevice() {
+		final String deviceType = propertyOrEnvVariable("BLOOMING_HOLLOWS_DEVICE");
+		final TempDevice device = createDevice(deviceType);
+		
+		log.info("Testing device...");
+		float temperature = device.getTemperature();
+		log.info("Got temperature [{}].", temperature);
+	}
 
 	private static TempDevice createDevice(final String deviceType) {
 		if (deviceType.equals("dummy")) {

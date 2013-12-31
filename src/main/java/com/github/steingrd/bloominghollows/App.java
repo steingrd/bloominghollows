@@ -16,6 +16,10 @@ public class App {
 		if ("-client".equals(args[0])) {
 			ClientApp.start();
 		}
+		
+		if ("-test-usbhid".equals(args[0])) {
+			ClientApp.testDevice();
+		}
 	}
 
 	public static String propertyOrEnvVariable(String name) {
