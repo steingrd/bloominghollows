@@ -2,8 +2,13 @@ package com.github.steingrd.bloominghollows;
 
 import javax.servlet.http.HttpServlet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class App extends HttpServlet {
+	
+	private static final Logger log = LoggerFactory.getLogger(App.class);
 	
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0) {
@@ -26,15 +31,17 @@ public class App extends HttpServlet {
 	public static String propertyOrEnvVariableWithDefault(String name, String defaultValue) {
 		String value = System.getProperty(name);
 		if (value != null) {
-			ClientApp.log.info("System property BLOOMING_HOLLOWS_TEMPERATURE_URL is [{}].", value);
+			log.info("System property [{}] is [{}].", name, value);
 			return value;
 		}
 	
 		value = System.getenv(name);
 		if (value != null) {
-			ClientApp.log.info("Environment variable BLOOMING_HOLLOWS_TEMPERATURE_URL is [{}].", value);
+			log.info("Environment variable [{}] is [{}].", name, value);
 			return value;
 		}
+		
+		log.info("No environment variable or system property with name [{}], using default value [{}].", name, defaultValue);
 	
 		return defaultValue;
 	}
