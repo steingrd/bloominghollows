@@ -17,7 +17,7 @@ public class App {
 			ClientApp.start();
 		}
 		
-		if ("-test-usbhid".equals(args[0])) {
+		if ("-testdevice".equals(args[0])) {
 			ClientApp.testDevice();
 		}
 	}

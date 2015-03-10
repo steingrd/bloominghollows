@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.steingrd.bloominghollows.client.DummyTempDevice;
+import com.github.steingrd.bloominghollows.client.FileTempDevice;
 import com.github.steingrd.bloominghollows.client.TempDevice;
 import com.github.steingrd.bloominghollows.client.TemperatureClient;
 import com.github.steingrd.bloominghollows.client.UsbHidTempDevice;
@@ -60,8 +60,8 @@ public class ClientApp {
 	}
 
 	private static TempDevice createDevice(final String deviceType) {
-		if (deviceType.equals("dummy")) {
-			return new DummyTempDevice();
+		if (deviceType.equals("file")) {
+			return new FileTempDevice();
 		} else if (deviceType.equals("usbhid")) {
 			return new UsbHidTempDevice();
 		} else {
